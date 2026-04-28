@@ -9,10 +9,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-//  SERVE PDF FILES
+// SERVE PDF FILES
 app.use('/bookworm_books', express.static(path.join(__dirname, '../bookworm_books')));
 
-//  DATABASE CONNECTION POOL (BETTER THAN createConnection)
+// DATABASE CONNECTION POOL
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -22,7 +22,7 @@ const db = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    ssl: { rejectUnauthorized: false }   // ← Required for Aiven!
+    ssl: { rejectUnauthorized: false }
 });
 
 // TEST DB
@@ -35,145 +35,71 @@ db.getConnection((err, connection) => {
     }
 });
 
-// --- ROUTES ---
-
-//  ROOT
+// ROOT
 app.get('/', (req, res) => {
     res.send('🚀 Bookworm API is running');
 });
 
-//  GET ALL BOOKS
+// GET ALL BOOKS
 app.get('/api/books', (req, res) => {
-    const query = 'SELECT * FROM books';
-
-    db.query(query, (err, results) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-
+    db.query('SELECT * FROM books', (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
         res.json(results);
     });
 });
 
-//  GET SINGLE BOOK (VERY USEFUL FOR DETAILS PAGE)
+// GET SINGLE BOOK
 app.get('/api/books/:id', (req, res) => {
-    const id = req.params.id;
-
-    db.query('SELECT * FROM books WHERE book_id = ?', [id], (err, results) => {
+    db.query('SELECT * FROM books WHERE book_id = ?', [req.params.id], (err, results) => {
         if (err) return res.status(500).json({ error: err });
-
-        if (results.length === 0) {
-            return res.status(404).json({ message: 'Book not found' });
-        }
-
+        if (results.length === 0) return res.status(404).json({ message: 'Book not found' });
         res.json(results[0]);
     });
 });
 
-//  GET REVIEWS
+// GET REVIEWS
 app.get('/api/reviews/:bookId', (req, res) => {
-    const bookId = req.params.bookId;
-
-    db.query('SELECT * FROM reviews WHERE book_id = ?', [bookId], (err, results) => {
+    db.query('SELECT * FROM reviews WHERE book_id = ?', [req.params.bookId], (err, results) => {
         if (err) return res.status(500).json({ error: err });
-
         res.json(results);
     });
 });
 
-//  ADD REVIEW
+// ADD REVIEW
 app.post('/api/reviews', (req, res) => {
     const { bookId, reviewerName, rating, reviewText } = req.body;
-
     if (!bookId || !reviewerName || !rating || !reviewText) {
         return res.status(400).json({ message: 'All fields required' });
     }
-
-    const query = `
-        INSERT INTO reviews (book_id, reviewer_name, rating, review_text)
-        VALUES (?, ?, ?, ?)
-    `;
-
-    db.query(query, [bookId, reviewerName, rating, reviewText], (err, result) => {
-        if (err) return res.status(500).json({ error: err });
-
-        res.json({
-            success: true,
-            message: '✅ Review saved!',
-            id: result.insertId
-        });
-    });
+    db.query(
+        'INSERT INTO reviews (book_id, reviewer_name, rating, review_text) VALUES (?, ?, ?, ?)',
+        [bookId, reviewerName, rating, reviewText],
+        (err, result) => {
+            if (err) return res.status(500).json({ error: err });
+            res.json({ success: true, message: '✅ Review saved!', id: result.insertId });
+        }
+    );
 });
 
-
-// ================= USER REGISTER =================
+// REGISTER
 app.post('/api/register', (req, res) => {
-   console.log("Register route HIT", req.body);
     const { username, email } = req.body;
-
-    const sql = "INSERT INTO users (username, email) VALUES (?, ?)";
-
-    db.query(sql, [username, email], (err, result) => {
-        if (err) {
-            console.log(err);
-            return res.json({ success: false, message: "User already exists" });
-        }
+    db.query('INSERT INTO users (username, email) VALUES (?, ?)', [username, email], (err) => {
+        if (err) return res.json({ success: false, message: 'User already exists' });
         res.json({ success: true });
     });
 });
 
-
-// ================= USER LOGIN =================
+// LOGIN
 app.post('/api/login', (req, res) => {
-    const { email } = req.body;
-
-    const sql = "SELECT * FROM users WHERE email = ?";
-
-    db.query(sql, [email], (err, result) => {
+    db.query('SELECT * FROM users WHERE email = ?', [req.body.email], (err, result) => {
         if (err) return res.json({ success: false });
-
-        if (result.length > 0) {
-            res.json({ success: true, user: result[0] });
-        } else {
-            res.json({ success: false, message: "User not found" });
-        }
+        if (result.length > 0) return res.json({ success: true, user: result[0] });
+        res.json({ success: false, message: 'User not found' });
     });
 });
-app.post('/api/reviews', (req, res) => {
-    const { user_id, book_id, review_text, rating } = req.body;
 
-    const query = `
-        INSERT INTO reviews (user_id, book_id, review_text, rating)
-        VALUES (?, ?, ?, ?)
-    `;
-
-    db.query(query, [user_id, book_id, review_text, rating], (err, result) => {
-        if (err) {
-            console.log(err);
-            return res.json({ success: false });
-        }
-        res.json({ success: true });
-    });
-});
-app.post('/api/reviews', (req, res) => {
-    const { user_id, book_id, review_text, rating } = req.body;
-
-    const query = `
-        INSERT INTO reviews (user_id, book_id, review_text, rating)
-        VALUES (?, ?, ?, ?)
-    `;
-
-    db.query(query, [user_id, book_id, review_text, rating], (err, result) => {
-        if (err) {
-            console.log("ERROR:", err);
-            return res.json({ success: false, message: "DB error" });
-        }
-
-        res.json({ success: true });
-    });
-});
-// --- START SERVER ---
+// START SERVER
 app.listen(3000, () => {
     console.log('🔥 Server running at http://localhost:3000');
 });
