@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -12,13 +14,15 @@ app.use('/bookworm_books', express.static(path.join(__dirname, '../bookworm_book
 
 //  DATABASE CONNECTION POOL (BETTER THAN createConnection)
 const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'bookworm',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    ssl: { rejectUnauthorized: false }   // ← Required for Aiven!
 });
 
 // TEST DB
