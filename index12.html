@@ -357,16 +357,13 @@
  </div>
 
  <!-- MODALS -->
- <!-- Updated Book Preview Modal -->
  <div class="modal-overlay" id="bookPreviewModal">
  <div class="modal modal-large">
  <div class="modal-header">
  <h3 class="font-display text-lg" id="previewTitle">Book Title</h3>
  <button class="modal-close" onclick="closeModal('bookPreviewModal')">&times;</button>
  </div>
- <div class="modal-body" id="previewContent">
- <!-- Content injected by JS -->
- </div>
+ <div class="modal-body" id="previewContent"></div>
  </div>
  </div>
 
@@ -378,353 +375,46 @@
  <div class="toast-container" id="toastContainer"></div>
 
  <script>
+ // ========== BACKEND URL ==========
+ const API = 'https://bookworm-backend.onrender.com';
+
  // ========== DATA ==========
- // Updated booksData to include all files from the screenshots
  let booksData = [
- // Fiction
- { 
- id: 1, 
- title: "Bell Rock", 
- author: "Joseph Carletonbeal", 
- rating: 4.0, 
- genre: "Fiction",
- color: "#3b82f6", 
- desc: "A story revolving around Bell Rock.",
- stats: { wantToRead: 150, currentlyReading: 10, haveRead: 50 },
- details: { publisher: "Joseph Carletonbeal", year: 2020, pages: 200, language: "English", editions: 1 },
- readLink: "bookworm_books/Fiction/BellRock.pdf" 
- },
- { 
- id: 2, 
- title: "Middlemarch", 
- author: "George Eliot", 
- rating: 4.6, 
- genre: "Fiction", 
- color: "#8b5cf6", 
- desc: "A study of provincial life, exploring the lives of various residents in a fictitious Midlands town.",
- stats: { wantToRead: 1200, currentlyReading: 100, haveRead: 800 },
- details: { publisher: "William Blackwood", year: 1871, pages: 800, language: "English", editions: 120 },
- readLink: "bookworm_books/Fiction/Middlemarch.pdf"
- },
- { 
- id: 3, 
- title: "The Dry Fire of Revenge", 
- author: "Azlan Shahid", 
- rating: 3.8, 
- genre: "Fiction", 
- color: "#ef4444", 
- desc: "A thrilling tale of vengeance.",
- stats: { wantToRead: 80, currentlyReading: 5, haveRead: 20 },
- details: { publisher: "Indie Pub", year: 2021, pages: 250, language: "English", editions: 1 },
- readLink: "bookworm_books/Fiction/TheDryFireOfRevenge.pdf"
- },
- { 
- id: 4, 
- title: "The Poor House Mystery", 
- author: "Anthony Perry jr", 
- rating: 4.1, 
- genre: "Fiction", 
- color: "#10b981", 
- desc: "Mystery and intrigue within the walls of a poor house.",
- stats: { wantToRead: 200, currentlyReading: 15, haveRead: 60 },
- details: { publisher: "Mystery House", year: 2019, pages: 310, language: "English", editions: 2 },
- readLink: "bookworm_books/Fiction/ThePoorHouseMystery.pdf"
- },
-
- // Mystery
- { 
- id: 5, 
- title: "Sherlock Adventures", 
- author: "Arthur Conan Doyle", 
- rating: 4.8, 
- genre: "Mystery", 
- color: "#f59e0b", 
- desc: "The adventures of the famous detective Sherlock Holmes.",
- stats: { wantToRead: 5000, currentlyReading: 200, haveRead: 3500 },
- details: { publisher: "Strand Magazine", year: 1892, pages: 300, language: "English", editions: 200 },
- readLink: "bookworm_books/Mystery/SherlockAdventures.pdf"
- },
- { 
- id: 6, 
- title: "Tales of Murder", 
- author: "Will Lankstead", 
- rating: 4.2, 
- genre: "Mystery", 
- color: "#dc2626", 
- desc: "A collection of murderous tales.",
- stats: { wantToRead: 300, currentlyReading: 40, haveRead: 150 },
- details: { publisher: "Crime Press", year: 2020, pages: 220, language: "English", editions: 1 },
- readLink: "bookworm_books/Mystery/TalesOfMurder.pdf"
- },
- { 
- id: 7, 
- title: "The Hound", 
- author: "Arthur Conan Doyle", 
- rating: 4.7, 
- genre: "Mystery", 
- color: "#1e293b", 
- desc: "The Hound of the Baskervilles.",
- stats: { wantToRead: 4000, currentlyReading: 150, haveRead: 2000 },
- details: { publisher: "George Newnes", year: 1902, pages: 350, language: "English", editions: 150 },
- readLink: "bookworm_books/Mystery/TheHound.pdf"
- },
- { 
- id: 8, 
- title: "The King in Yellow", 
- author: "Robert W. Chambers", 
- rating: 4.3, 
- genre: "Mystery", 
- color: "#fbbf24", 
- desc: "A book of short stories linked by a mysterious play.",
- stats: { wantToRead: 800, currentlyReading: 50, haveRead: 300 },
- details: { publisher: "F. Tennyson Neely", year: 1895, pages: 290, language: "English", editions: 50 },
- readLink: "bookworm_books/Mystery/TheKingInYellow.pdf"
- },
-
- // Non-Fiction
- { 
- id: 9, 
- title: "Ahimsa", 
- author: "Dadashri", 
- rating: 4.5, 
- genre: "Non-Fiction", 
- color: "#84cc16", 
- desc: "Exploring the philosophy of non-violence.",
- stats: { wantToRead: 100, currentlyReading: 10, haveRead: 40 },
- details: { publisher: "Wisdom Pub", year: 2018, pages: 180, language: "English", editions: 1 },
- readLink: "bookworm_books/Non_Fiction/ahimsa.pdf"
- },
- { 
- id: 10, 
- title: "Eclipsed", 
- author: "Peter MCMillan", 
- rating: 4.0, 
- genre: "Non-Fiction", 
- color: "#0ea5e9", 
- desc: "Stories of eclipses and celestial events.",
- stats: { wantToRead: 150, currentlyReading: 12, haveRead: 45 },
- details: { publisher: "Science Daily", year: 2021, pages: 210, language: "English", editions: 1 },
- readLink: "bookworm_books/Non_Fiction/eclipsed.pdf"
- },
- { 
- id: 11, 
- title: "The Republic", 
- author: "Plato", 
- rating: 4.7, 
- genre: "Non-Fiction", 
- color: "#6366f1", 
- desc: "A Socratic dialogue exploring justice.",
- stats: { wantToRead: 3000, currentlyReading: 200, haveRead: 1500 },
- details: { publisher: "Classics Inc", year: -380, pages: 400, language: "Greek/English", editions: 500 },
- readLink: "bookworm_books/Non_Fiction/TheRepublic.pdf"
- },
- { 
- id: 12, 
- title: "The Wealth of Nations", 
- author: "Adam Smith", 
- rating: 4.5, 
- genre: "Non-Fiction", 
- color: "#14b8a6", 
- desc: "A foundational work in classical economics.",
- stats: { wantToRead: 2500, currentlyReading: 120, haveRead: 1100 },
- details: { publisher: "W. Strahan and T. Cadell", year: 1776, pages: 900, language: "English", editions: 300 },
- readLink: "bookworm_books/Non_Fiction/TheWeALTHofnations.pdf"
- },
- { 
- id: 13, 
- title: "Walden", 
- author: "Henry David Thoreau", 
- rating: 4.4, 
- genre: "Non-Fiction", 
- color: "#22c55e", 
- desc: "A reflection on simple living in natural surroundings.",
- stats: { wantToRead: 1800, currentlyReading: 90, haveRead: 700 },
- details: { publisher: "Ticknor and Fields", year: 1854, pages: 350, language: "English", editions: 200 },
- readLink: "bookworm_books/Non_Fiction/Walden.pdf"
- },
-
- // Sci-Fi
- { 
- id: 14, 
- title: "Frankenstein", 
- author: "Mary Shelley", 
- rating: 4.6, 
- genre: "Sci-Fi", 
- color: "#64748b", 
- desc: "The tale of a scientist and his monstrous creation.",
- stats: { wantToRead: 3500, currentlyReading: 200, haveRead: 2000 },
- details: { publisher: "Lackington, Hughes, Harding, Mavor & Jones", year: 1818, pages: 280, language: "English", editions: 400 },
- readLink: "bookworm_books/SciFi/Frankenstein.pdf"
- },
- { 
- id: 15, 
- title: "Gilgamesh", 
- author: "John FK", 
- rating: 4.3, 
- genre: "Sci-Fi", 
- color: "#a3e635", 
- desc: "An epic poem often cited as one of the earliest surviving great works of literature.",
- stats: { wantToRead: 1500, currentlyReading: 80, haveRead: 600 },
- details: { publisher: "Ancient Sumeria", year: -2100, pages: 200, language: "Akkadian/English", editions: 150 },
- readLink: "bookworm_books/SciFi/Gilgamesh.pdf"
- },
- { 
- id: 16, 
- title: "One Galaxy", 
- author: "L.M.Ridd", 
- rating: 4.1, 
- genre: "Sci-Fi", 
- color: "#4f46e5", 
- desc: "Space exploration and adventure.",
- stats: { wantToRead: 200, currentlyReading: 20, haveRead: 90 },
- details: { publisher: "Galaxy Press", year: 2022, pages: 320, language: "English", editions: 1 },
- readLink: "bookworm_books/SciFi/OneGalaxy.pdf"
- },
- { 
- id: 17, 
- title: "Project Hail Mary", 
- author: "Andy Weir", 
- rating: 4.8, 
- genre: "Sci-Fi", 
- color: "#0284c7", 
- desc: "A lone astronaut must save Earth from disaster.",
- stats: { wantToRead: 4500, currentlyReading: 300, haveRead: 2500 },
- details: { publisher: "Ballantine Books", year: 2021, pages: 496, language: "English", editions: 35 },
- readLink: "bookworm_books/SciFi/ProjectMaryHail.pdf"
- },
- { 
- id: 18, 
- title: "The Time Machine", 
- author: "H.G. Wells", 
- rating: 4.5, 
- genre: "Sci-Fi", 
- color: "#e11d48", 
- desc: "A journey through time.",
- stats: { wantToRead: 3000, currentlyReading: 150, haveRead: 1800 },
- details: { publisher: "William Heinemann", year: 1895, pages: 150, language: "English", editions: 300 },
- readLink: "bookworm_books/SciFi/TheTimeMachine.pdf"
- },
- { 
- id: 19, 
- title: "Twenty Thousand Leagues Under the Sea", 
- author: "Jules Verne", 
- rating: 4.4, 
- genre: "Sci-Fi", 
- color: "#0891b2", 
- desc: "Adventures under the sea with Captain Nemo.",
- stats: { wantToRead: 2800, currentlyReading: 130, haveRead: 1600 },
- details: { publisher: "Pierre-Jules Hetzel", year: 1870, pages: 400, language: "French/English", editions: 250 },
- readLink: "bookworm_books/SciFi/TwentyThousandLeaguesUndertheSea.pdf"
- },
-
- // Self-Help
- { 
- id: 20, 
- title: "Atomic Habits", 
- author: "James Clear", 
- rating: 4.9, 
- genre: "Self-Help", 
- color: "#f59e0b", 
- desc: "An Easy & Proven Way to Build Good Habits & Break Bad Ones.",
- stats: { wantToRead: 6000, currentlyReading: 400, haveRead: 3000 },
- details: { publisher: "Avery", year: 2018, pages: 320, language: "English", editions: 150 },
- readLink: "bookworm_books/self_help/Atomichabits.pdf"
- },
- { 
- id: 21, 
- title: "Bhagavad Gita", 
- author: "Vyasa", 
- rating: 4.8, 
- genre: "Self-Help", 
- color: "#fcd34d", 
- desc: "A 700-verse Hindu scripture that is part of the epic Mahabharata.",
- stats: { wantToRead: 5000, currentlyReading: 300, haveRead: 4000 },
- details: { publisher: "Ancient", year: -200, pages: 200, language: "Sanskrit/English", editions: 1000 },
- readLink: "bookworm_books/self_help/BhagvadGita.pdf"
- },
- { 
- id: 22, 
- title: "Ultimate Self Help Book", 
- author: "Isidora Vey", 
- rating: 4.0, 
- genre: "Self-Help", 
- color: "#a78bfa", 
- desc: "A comprehensive guide to improving your life.",
- stats: { wantToRead: 150, currentlyReading: 10, haveRead: 40 },
- details: { publisher: "Self Pub", year: 2020, pages: 250, language: "English", editions: 1 },
- readLink: "bookworm_books/self_help/UltimateSelfHelpBook.pdf"
- },
-
- // Thriller
- { 
- id: 23, 
- title: "The Strange case of Dr.Jekyll and Mr.Hyde", 
- author: "Robert Louis Stevenson", 
- rating: 4.2, 
- genre: "Thriller", 
- color: "#b91c1c", 
- desc: "Thrilling adventures of a doctor.",
- stats: { wantToRead: 200, currentlyReading: 15, haveRead: 70 },
- details: { publisher: "Med Press", year: 2021, pages: 280, language: "English", editions: 1 },
- readLink: "bookworm_books/Thriller/docstrange.pdf"
- },
- { 
- id: 24, 
- title: "Dracula", 
- author: "Bram Stoker", 
- rating: 4.7, 
- genre: "Thriller", 
- color: "#7f1d1d", 
- desc: "The classic gothic horror novel.",
- stats: { wantToRead: 4000, currentlyReading: 250, haveRead: 2200 },
- details: { publisher: "Archibald Constable and Company", year: 1897, pages: 390, language: "English", editions: 300 },
- readLink: "bookworm_books/Thriller/dracula.pdf"
- },
- { 
- id: 25, 
- title: "Heart of Drakness", 
- author: "Joseph Conrad", 
- rating: 4.1, 
- genre: "Thriller", 
- color: "#be123c", 
- desc: "A suspenseful story.",
- stats: { wantToRead: 120, currentlyReading: 10, haveRead: 30 },
- details: { publisher: "Thriller Pub", year: 2019, pages: 200, language: "English", editions: 1 },
- readLink: "bookworm_books/Thriller/heart.pdf"
- },
- { 
- id: 26, 
- title: "Jungle Justice", 
- author: "Faith Ijiga", 
- rating: 3.9, 
- genre: "Thriller", 
- color: "#15803d", 
- desc: "A jungle thriller.",
- stats: { wantToRead: 90, currentlyReading: 5, haveRead: 20 },
- details: { publisher: "Wild Press", year: 2022, pages: 310, language: "English", editions: 1 },
- readLink: "bookworm_books/Thriller/junglelej.pdf"
- },
- { 
- id: 27, 
- title: "Nurse Becky Gets Shot", 
- author: "Gary Baker", 
- rating: 3.5, 
- genre: "Thriller", 
- color: "#881337", 
- desc: "A medical thriller.",
- stats: { wantToRead: 100, currentlyReading: 8, haveRead: 15 },
- details: { publisher: "Nurse Pub", year: 2020, pages: 180, language: "English", editions: 1 },
- readLink: "bookworm_books/Thriller/NurseBeckyGetsShotobooko.pdf"
- }
+ { id: 1, title: "Bell Rock", author: "Joseph Carletonbeal", rating: 4.0, genre: "Fiction", color: "#3b82f6", desc: "A story revolving around Bell Rock.", stats: { wantToRead: 150, currentlyReading: 10, haveRead: 50 }, details: { publisher: "Joseph Carletonbeal", year: 2020, pages: 200, language: "English", editions: 1 }, readLink: "bookworm_books/Fiction/BellRock.pdf" },
+ { id: 2, title: "Middlemarch", author: "George Eliot", rating: 4.6, genre: "Fiction", color: "#8b5cf6", desc: "A study of provincial life.", stats: { wantToRead: 1200, currentlyReading: 100, haveRead: 800 }, details: { publisher: "William Blackwood", year: 1871, pages: 800, language: "English", editions: 120 }, readLink: "bookworm_books/Fiction/Middlemarch.pdf" },
+ { id: 3, title: "The Dry Fire of Revenge", author: "Azlan Shahid", rating: 3.8, genre: "Fiction", color: "#ef4444", desc: "A thrilling tale of vengeance.", stats: { wantToRead: 80, currentlyReading: 5, haveRead: 20 }, details: { publisher: "Indie Pub", year: 2021, pages: 250, language: "English", editions: 1 }, readLink: "bookworm_books/Fiction/TheDryFireOfRevenge.pdf" },
+ { id: 4, title: "The Poor House Mystery", author: "Anthony Perry jr", rating: 4.1, genre: "Fiction", color: "#10b981", desc: "Mystery and intrigue within the walls of a poor house.", stats: { wantToRead: 200, currentlyReading: 15, haveRead: 60 }, details: { publisher: "Mystery House", year: 2019, pages: 310, language: "English", editions: 2 }, readLink: "bookworm_books/Fiction/ThePoorHouseMystery.pdf" },
+ { id: 5, title: "Sherlock Adventures", author: "Arthur Conan Doyle", rating: 4.8, genre: "Mystery", color: "#f59e0b", desc: "The adventures of the famous detective Sherlock Holmes.", stats: { wantToRead: 5000, currentlyReading: 200, haveRead: 3500 }, details: { publisher: "Strand Magazine", year: 1892, pages: 300, language: "English", editions: 200 }, readLink: "bookworm_books/Mystery/SherlockAdventures.pdf" },
+ { id: 6, title: "Tales of Murder", author: "Will Lankstead", rating: 4.2, genre: "Mystery", color: "#dc2626", desc: "A collection of murderous tales.", stats: { wantToRead: 300, currentlyReading: 40, haveRead: 150 }, details: { publisher: "Crime Press", year: 2020, pages: 220, language: "English", editions: 1 }, readLink: "bookworm_books/Mystery/TalesOfMurder.pdf" },
+ { id: 7, title: "The Hound", author: "Arthur Conan Doyle", rating: 4.7, genre: "Mystery", color: "#1e293b", desc: "The Hound of the Baskervilles.", stats: { wantToRead: 4000, currentlyReading: 150, haveRead: 2000 }, details: { publisher: "George Newnes", year: 1902, pages: 350, language: "English", editions: 150 }, readLink: "bookworm_books/Mystery/TheHound.pdf" },
+ { id: 8, title: "The King in Yellow", author: "Robert W. Chambers", rating: 4.3, genre: "Mystery", color: "#fbbf24", desc: "A book of short stories linked by a mysterious play.", stats: { wantToRead: 800, currentlyReading: 50, haveRead: 300 }, details: { publisher: "F. Tennyson Neely", year: 1895, pages: 290, language: "English", editions: 50 }, readLink: "bookworm_books/Mystery/TheKingInYellow.pdf" },
+ { id: 9, title: "Ahimsa", author: "Dadashri", rating: 4.5, genre: "Non-Fiction", color: "#84cc16", desc: "Exploring the philosophy of non-violence.", stats: { wantToRead: 100, currentlyReading: 10, haveRead: 40 }, details: { publisher: "Wisdom Pub", year: 2018, pages: 180, language: "English", editions: 1 }, readLink: "bookworm_books/Non_Fiction/ahimsa.pdf" },
+ { id: 10, title: "Eclipsed", author: "Peter MCMillan", rating: 4.0, genre: "Non-Fiction", color: "#0ea5e9", desc: "Stories of eclipses and celestial events.", stats: { wantToRead: 150, currentlyReading: 12, haveRead: 45 }, details: { publisher: "Science Daily", year: 2021, pages: 210, language: "English", editions: 1 }, readLink: "bookworm_books/Non_Fiction/eclipsed.pdf" },
+ { id: 11, title: "The Republic", author: "Plato", rating: 4.7, genre: "Non-Fiction", color: "#6366f1", desc: "A Socratic dialogue exploring justice.", stats: { wantToRead: 3000, currentlyReading: 200, haveRead: 1500 }, details: { publisher: "Classics Inc", year: -380, pages: 400, language: "Greek/English", editions: 500 }, readLink: "bookworm_books/Non_Fiction/TheRepublic.pdf" },
+ { id: 12, title: "The Wealth of Nations", author: "Adam Smith", rating: 4.5, genre: "Non-Fiction", color: "#14b8a6", desc: "A foundational work in classical economics.", stats: { wantToRead: 2500, currentlyReading: 120, haveRead: 1100 }, details: { publisher: "W. Strahan and T. Cadell", year: 1776, pages: 900, language: "English", editions: 300 }, readLink: "bookworm_books/Non_Fiction/TheWeALTHofnations.pdf" },
+ { id: 13, title: "Walden", author: "Henry David Thoreau", rating: 4.4, genre: "Non-Fiction", color: "#22c55e", desc: "A reflection on simple living in natural surroundings.", stats: { wantToRead: 1800, currentlyReading: 90, haveRead: 700 }, details: { publisher: "Ticknor and Fields", year: 1854, pages: 350, language: "English", editions: 200 }, readLink: "bookworm_books/Non_Fiction/Walden.pdf" },
+ { id: 14, title: "Frankenstein", author: "Mary Shelley", rating: 4.6, genre: "Sci-Fi", color: "#64748b", desc: "The tale of a scientist and his monstrous creation.", stats: { wantToRead: 3500, currentlyReading: 200, haveRead: 2000 }, details: { publisher: "Lackington, Hughes", year: 1818, pages: 280, language: "English", editions: 400 }, readLink: "bookworm_books/SciFi/Frankenstein.pdf" },
+ { id: 15, title: "Gilgamesh", author: "John FK", rating: 4.3, genre: "Sci-Fi", color: "#a3e635", desc: "An epic poem, one of the earliest surviving great works of literature.", stats: { wantToRead: 1500, currentlyReading: 80, haveRead: 600 }, details: { publisher: "Ancient Sumeria", year: -2100, pages: 200, language: "Akkadian/English", editions: 150 }, readLink: "bookworm_books/SciFi/Gilgamesh.pdf" },
+ { id: 16, title: "One Galaxy", author: "L.M.Ridd", rating: 4.1, genre: "Sci-Fi", color: "#4f46e5", desc: "Space exploration and adventure.", stats: { wantToRead: 200, currentlyReading: 20, haveRead: 90 }, details: { publisher: "Galaxy Press", year: 2022, pages: 320, language: "English", editions: 1 }, readLink: "bookworm_books/SciFi/OneGalaxy.pdf" },
+ { id: 17, title: "Project Hail Mary", author: "Andy Weir", rating: 4.8, genre: "Sci-Fi", color: "#0284c7", desc: "A lone astronaut must save Earth from disaster.", stats: { wantToRead: 4500, currentlyReading: 300, haveRead: 2500 }, details: { publisher: "Ballantine Books", year: 2021, pages: 496, language: "English", editions: 35 }, readLink: "bookworm_books/SciFi/ProjectMaryHail.pdf" },
+ { id: 18, title: "The Time Machine", author: "H.G. Wells", rating: 4.5, genre: "Sci-Fi", color: "#e11d48", desc: "A journey through time.", stats: { wantToRead: 3000, currentlyReading: 150, haveRead: 1800 }, details: { publisher: "William Heinemann", year: 1895, pages: 150, language: "English", editions: 300 }, readLink: "bookworm_books/SciFi/TheTimeMachine.pdf" },
+ { id: 19, title: "Twenty Thousand Leagues Under the Sea", author: "Jules Verne", rating: 4.4, genre: "Sci-Fi", color: "#0891b2", desc: "Adventures under the sea with Captain Nemo.", stats: { wantToRead: 2800, currentlyReading: 130, haveRead: 1600 }, details: { publisher: "Pierre-Jules Hetzel", year: 1870, pages: 400, language: "French/English", editions: 250 }, readLink: "bookworm_books/SciFi/TwentyThousandLeaguesUndertheSea.pdf" },
+ { id: 20, title: "Atomic Habits", author: "James Clear", rating: 4.9, genre: "Self-Help", color: "#f59e0b", desc: "An Easy & Proven Way to Build Good Habits & Break Bad Ones.", stats: { wantToRead: 6000, currentlyReading: 400, haveRead: 3000 }, details: { publisher: "Avery", year: 2018, pages: 320, language: "English", editions: 150 }, readLink: "bookworm_books/self_help/Atomichabits.pdf" },
+ { id: 21, title: "Bhagavad Gita", author: "Vyasa", rating: 4.8, genre: "Self-Help", color: "#fcd34d", desc: "A 700-verse Hindu scripture.", stats: { wantToRead: 5000, currentlyReading: 300, haveRead: 4000 }, details: { publisher: "Ancient", year: -200, pages: 200, language: "Sanskrit/English", editions: 1000 }, readLink: "bookworm_books/self_help/BhagvadGita.pdf" },
+ { id: 22, title: "Ultimate Self Help Book", author: "Isidora Vey", rating: 4.0, genre: "Self-Help", color: "#a78bfa", desc: "A comprehensive guide to improving your life.", stats: { wantToRead: 150, currentlyReading: 10, haveRead: 40 }, details: { publisher: "Self Pub", year: 2020, pages: 250, language: "English", editions: 1 }, readLink: "bookworm_books/self_help/UltimateSelfHelpBook.pdf" },
+ { id: 23, title: "The Strange case of Dr.Jekyll and Mr.Hyde", author: "Robert Louis Stevenson", rating: 4.2, genre: "Thriller", color: "#b91c1c", desc: "Thrilling adventures of a doctor.", stats: { wantToRead: 200, currentlyReading: 15, haveRead: 70 }, details: { publisher: "Med Press", year: 2021, pages: 280, language: "English", editions: 1 }, readLink: "bookworm_books/Thriller/docstrange.pdf" },
+ { id: 24, title: "Dracula", author: "Bram Stoker", rating: 4.7, genre: "Thriller", color: "#7f1d1d", desc: "The classic gothic horror novel.", stats: { wantToRead: 4000, currentlyReading: 250, haveRead: 2200 }, details: { publisher: "Archibald Constable", year: 1897, pages: 390, language: "English", editions: 300 }, readLink: "bookworm_books/Thriller/dracula.pdf" },
+ { id: 25, title: "Heart of Darkness", author: "Joseph Conrad", rating: 4.1, genre: "Thriller", color: "#be123c", desc: "A suspenseful story.", stats: { wantToRead: 120, currentlyReading: 10, haveRead: 30 }, details: { publisher: "Thriller Pub", year: 2019, pages: 200, language: "English", editions: 1 }, readLink: "bookworm_books/Thriller/heart.pdf" },
+ { id: 26, title: "Jungle Justice", author: "Faith Ijiga", rating: 3.9, genre: "Thriller", color: "#15803d", desc: "A jungle thriller.", stats: { wantToRead: 90, currentlyReading: 5, haveRead: 20 }, details: { publisher: "Wild Press", year: 2022, pages: 310, language: "English", editions: 1 }, readLink: "bookworm_books/Thriller/junglelej.pdf" },
+ { id: 27, title: "Nurse Becky Gets Shot", author: "Gary Baker", rating: 3.5, genre: "Thriller", color: "#881337", desc: "A medical thriller.", stats: { wantToRead: 100, currentlyReading: 8, haveRead: 15 }, details: { publisher: "Nurse Pub", year: 2020, pages: 180, language: "English", editions: 1 }, readLink: "bookworm_books/Thriller/NurseBeckyGetsShotobooko.pdf" }
  ];
- 
+
  let reviewsData = [
  { id: 1, bookId: 1, bookTitle: "Bell Rock", reviewer: "Sarah", initials: "SM", rating: 4, title: "Twists and Turns", text: "Absolutely gripping.", date: "2 hours ago", isCurrentUser: false }
  ];
  let currentUser = null;
  let userPassword = "Pass123";
  let userReadingList = [];
- // FIX: Start with empty arrays — these will be populated by real user actions
  let userBooksRead = [];
  let userBooksLiked = [];
 
@@ -754,8 +444,7 @@
  document.querySelectorAll('.auth-page').forEach(p => p.classList.remove('active'));
  document.getElementById(page + 'Page').classList.add('active');
  }
- 
- // FIXED: Login Logic
+
  document.getElementById('loginForm').addEventListener('submit', function(e) {
  e.preventDefault();
  let valid = true;
@@ -766,127 +455,100 @@
  if(!email) { showError('loginEmail', 'Required'); valid = false; }
  else if(!isValidEmail(email)) { showError('loginEmail', 'Invalid'); valid = false; } else clearError('loginEmail');
  if(!pass) { showError('loginPassword', 'Required'); valid = false; } else clearError('loginPassword');
- 
+
  if(valid) {
-    fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify({ 
-            email: email,
-            password: pass
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success) {
-            currentUser = {
-                name: data.user.username,
-                email: data.user.email,
-                initials: data.user.username.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2),
-                genres: ['Fiction'],
-                contact: '',
-                age: ''
-            };
-            loginUser();
-        } else {
-            showToast(data.message || 'User not found', 'error');
-        }
-    })
-    .catch(err => {
-        console.log(err);
-        showToast('Connection error. Is server running?', 'error');
-    });
-}
+   fetch(`${API}/api/login`, {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ email: email, password: pass })
+   })
+   .then(res => res.json())
+   .then(data => {
+     if(data.success) {
+       currentUser = {
+         name: data.user.username,
+         email: data.user.email,
+         initials: data.user.username.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2),
+         genres: ['Fiction'],
+         contact: '',
+         age: ''
+       };
+       loginUser();
+     } else {
+       showToast(data.message || 'User not found', 'error');
+     }
+   })
+   .catch(err => {
+     console.log(err);
+     showToast('Connection error. Is server running?', 'error');
+   });
+ }
  });
 
-// FINAL CLEAN REGISTER LOGIC
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    let valid = true;
+ document.getElementById('registerForm').addEventListener('submit', function(e) {
+ e.preventDefault();
+ let valid = true;
+ const name = document.getElementById('registerName').value;
+ const email = document.getElementById('registerEmail').value;
+ const pass = document.getElementById('registerPassword').value;
+ const cpass = document.getElementById('registerConfirmPassword').value;
+ const terms = document.getElementById('agreeTerms').checked;
+ if(!name) { showError('registerName', 'Required'); valid = false; } else clearError('registerName');
+ if(!email) { showError('registerEmail', 'Required'); valid = false; }
+ else if(!isValidEmail(email)) { showError('registerEmail', 'Invalid'); valid = false; } else clearError('registerEmail');
+ const passErr = isValidPass(pass);
+ if(passErr) { showError('registerPassword', passErr); valid = false; } else clearError('registerPassword');
+ if(pass !== cpass) { showError('registerConfirmPassword', 'Mismatch'); valid = false; } else clearError('registerConfirmPassword');
+ if(!terms) { showError('agreeTerms', 'Must agree'); valid = false; } else clearError('agreeTerms');
 
-    const name = document.getElementById('registerName').value;
-    const email = document.getElementById('registerEmail').value;
-    const pass = document.getElementById('registerPassword').value;
-    const cpass = document.getElementById('registerConfirmPassword').value;
-    const terms = document.getElementById('agreeTerms').checked;
+ if(valid) {
+   const btn = this.querySelector('button[type="submit"]');
+   const originalText = btn.innerText;
+   btn.innerText = "Creating...";
+   btn.disabled = true;
+   fetch(`${API}/api/register`, {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ username: name, email: email, password: pass })
+   })
+   .then(res => res.json())
+   .then(data => {
+     if(data.success) {
+       showToast('Account created! Please login.', 'success');
+       showAuthPage('login');
+       document.getElementById('registerForm').reset();
+     } else {
+       showToast(data.message || 'Error creating account', 'error');
+     }
+   })
+   .catch(err => {
+     console.log(err);
+     showToast('Cannot connect to server', 'error');
+   })
+   .finally(() => {
+     btn.innerText = originalText;
+     btn.disabled = false;
+   });
+ }
+ });
 
-    if(!name) { showError('registerName', 'Required'); valid = false; } 
-    else clearError('registerName');
+ function loginUser() {
+ document.querySelectorAll('.auth-page').forEach(p => p.classList.remove('active'));
+ document.getElementById('appShell').classList.add('active');
+ updateUI();
+ showToast('Welcome, ' + currentUser.name + '!', 'success');
+ navigateTo('dashboard');
+ }
 
-    if(!email) { showError('registerEmail', 'Required'); valid = false; }
-    else if(!isValidEmail(email)) { showError('registerEmail', 'Invalid'); valid = false; } 
-    else clearError('registerEmail');
-
-    const passErr = isValidPass(pass);
-    if(passErr) { showError('registerPassword', passErr); valid = false; } 
-    else clearError('registerPassword');
-
-    if(pass !== cpass) { showError('registerConfirmPassword', 'Mismatch'); valid = false; } 
-    else clearError('registerConfirmPassword');
-
-    if(!terms) { showError('agreeTerms', 'Must agree'); valid = false; } 
-    else clearError('agreeTerms');
-
-    if(valid) {
-        const btn = this.querySelector('button[type="submit"]');
-        const originalText = btn.innerText;
-
-        btn.innerText = "Creating...";
-        btn.disabled = true;
-
-        fetch('http://127.0.0.1:3000/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: name,
-                email: email,
-                password: pass
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showToast('Account created! Please login.', 'success');
-                showAuthPage('login');
-                document.getElementById('registerForm').reset();
-            } else {
-                showToast(data.message || 'Error creating account', 'error');
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            showToast('Cannot connect to server', 'error');
-        })
-        .finally(() => {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        });
-    }
-});
-       
-
-function loginUser() {
-    document.querySelectorAll('.auth-page').forEach(p => p.classList.remove('active'));
-    document.getElementById('appShell').classList.add('active');
-    updateUI();
-    showToast('Welcome, ' + currentUser.name + '!', 'success');
-    navigateTo('dashboard');
-}
-
-function logout() {
-    currentUser = null;
-    // FIX: Reset user data on logout
-    userBooksRead = [];
-    userBooksLiked = [];
-    userReadingList = [];
-    document.getElementById('appShell').classList.remove('active');
-    showAuthPage('login');
-    showToast('Logged out', 'success');
-}
+ function logout() {
+ currentUser = null;
+ userBooksRead = [];
+ userBooksLiked = [];
+ userReadingList = [];
+ document.getElementById('appShell').classList.remove('active');
+ showAuthPage('login');
+ showToast('Logged out', 'success');
+ }
 
  // ========== NAVIGATION ==========
  function navigateTo(page) {
@@ -901,7 +563,6 @@ function logout() {
  if(page === 'recommendations') renderRecommendations();
  if(page === 'dashboard') renderDashboard();
  if(page === 'profile') renderProfile();
-
  document.getElementById('sidebar').classList.remove('open');
  }
  function toggleSidebar() {
@@ -915,12 +576,9 @@ function logout() {
  document.getElementById('sidebarUserName').textContent = currentUser.name;
  document.getElementById('sidebarUserEmail').textContent = currentUser.email;
  document.getElementById('dashboardGreeting').textContent = 'Welcome back, ' + currentUser.name;
-
- // FIX: These counts now reflect real user actions
  document.getElementById('booksReadCount').textContent = userBooksRead.length;
  document.getElementById('reviewsWrittenCount').textContent = reviewsData.filter(r => r.isCurrentUser).length;
  document.getElementById('booksLikedCount').textContent = userBooksLiked.length;
-
  renderProfile();
  }
  function showToast(msg, type) {
@@ -934,36 +592,30 @@ function logout() {
  function openModal(id) { document.getElementById(id).classList.add('active'); }
  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
- // ========== FIX: Genre Normalization ==========
  function normalizeGenre(genre) {
-    if(!genre) return 'Other';
-    const g = genre.toString().trim().toLowerCase();
-    const genreMap = {
-        'fiction': 'Fiction',
-        'non-fiction': 'Non-Fiction', 'nonfiction': 'Non-Fiction', 'non fiction': 'Non-Fiction', 'non_fiction': 'Non-Fiction',
-        'mystery': 'Mystery',
-        'sci-fi': 'Sci-Fi', 'scifi': 'Sci-Fi', 'sci fi': 'Sci-Fi', 'sci_fi': 'Sci-Fi', 'science fiction': 'Sci-Fi',
-        'thriller': 'Thriller',
-        'self-help': 'Self-Help', 'selfhelp': 'Self-Help', 'self help': 'Self-Help', 'self_help': 'Self-Help',
-        'romance': 'Romance',
-        'horror': 'Horror',
-        'biography': 'Biography', 'autobiography': 'Biography',
-        'history': 'History',
-        'philosophy': 'Philosophy',
-        'fantasy': 'Fantasy'
-    };
-    return genreMap[g] || genre;
+ if(!genre) return 'Other';
+ const g = genre.toString().trim().toLowerCase();
+ const genreMap = {
+   'fiction': 'Fiction',
+   'non-fiction': 'Non-Fiction', 'nonfiction': 'Non-Fiction', 'non fiction': 'Non-Fiction', 'non_fiction': 'Non-Fiction',
+   'mystery': 'Mystery',
+   'sci-fi': 'Sci-Fi', 'scifi': 'Sci-Fi', 'sci fi': 'Sci-Fi', 'sci_fi': 'Sci-Fi', 'science fiction': 'Sci-Fi',
+   'thriller': 'Thriller',
+   'self-help': 'Self-Help', 'selfhelp': 'Self-Help', 'self help': 'Self-Help', 'self_help': 'Self-Help',
+   'romance': 'Romance', 'horror': 'Horror', 'biography': 'Biography', 'autobiography': 'Biography',
+   'history': 'History', 'philosophy': 'Philosophy', 'fantasy': 'Fantasy'
+ };
+ return genreMap[g] || genre;
  }
 
  // ========== BOOKS & SEARCH ==========
  function renderBooks(filter = 'All', search = '') {
  const grid = document.getElementById('booksGrid');
  let filtered = booksData;
-
  if(filter !== 'All') filtered = filtered.filter(b => normalizeGenre(b.genre) === filter);
  if(search) filtered = filtered.filter(b =>
- b.title.toLowerCase().includes(search.toLowerCase()) ||
- b.author.toLowerCase().includes(search.toLowerCase())
+   b.title.toLowerCase().includes(search.toLowerCase()) ||
+   b.author.toLowerCase().includes(search.toLowerCase())
  );
  grid.innerHTML = filtered.map(b => `
  <div class="card book-card" onclick="openBookPreview(${b.id})">
@@ -974,9 +626,7 @@ function logout() {
  </div>
  </div>
  <div class="book-info">
- <div class="star-rating mb-2">
- ${createStarsHTML(b.rating)}
- </div>
+ <div class="star-rating mb-2">${createStarsHTML(b.rating)}</div>
  <p class="text-xs text-[var(--text-muted)] line-clamp-2">${b.desc || 'No description available.'}</p>
  </div>
  </div>
@@ -988,52 +638,33 @@ function logout() {
  renderBooks(genre, document.getElementById('globalSearch').value);
  }
  document.getElementById('globalSearch').addEventListener('input', (e) => {
- if(!document.getElementById('booksPage').classList.contains('active')) {
- navigateTo('books');
- }
+ if(!document.getElementById('booksPage').classList.contains('active')) navigateTo('books');
  renderBooks('All', e.target.value);
  });
 
- // ========== FIX: markAsRead function ==========
  function markAsRead(id) {
-    const idx = userBooksRead.indexOf(id);
-    if(idx === -1) {
-        userBooksRead.push(id);
-        showToast('Marked as read!', 'success');
-    } else {
-        userBooksRead.splice(idx, 1);
-        showToast('Removed from Books Read', 'success');
-    }
-    updateUI();
-    // Re-render the preview modal to update button state
-    if(document.getElementById('bookPreviewModal').classList.contains('active')) {
-        openBookPreview(id);
-    }
-    // Re-render dashboard if visible
-    if(document.getElementById('dashboardPage').classList.contains('active')) {
-        renderDashboard();
-    }
+ const idx = userBooksRead.indexOf(id);
+ if(idx === -1) { userBooksRead.push(id); showToast('Marked as read!', 'success'); }
+ else { userBooksRead.splice(idx, 1); showToast('Removed from Books Read', 'success'); }
+ updateUI();
+ if(document.getElementById('bookPreviewModal').classList.contains('active')) openBookPreview(id);
+ if(document.getElementById('dashboardPage').classList.contains('active')) renderDashboard();
  }
 
- // ========== BOOK PREVIEW WITH TABS (Updated) ==========
  function openBookPreview(id) {
  const book = booksData.find(b => b.id === id);
  if(!book) return;
  const isLiked = userBooksLiked.includes(id);
  const isInList = userReadingList.includes(id);
- const isRead = userBooksRead.includes(id); // FIX: Track read state
- 
+ const isRead = userBooksRead.includes(id);
  document.getElementById('previewTitle').textContent = book.title;
- 
- let tabHeaderHtml = `
+ document.getElementById('previewContent').innerHTML = `
  <div class="book-tabs-container">
  <button class="book-tab-btn active" onclick="switchBookTab(event, 'overview-${id}')">Overview</button>
  <button class="book-tab-btn" onclick="switchBookTab(event, 'details-${id}')">Details</button>
  <button class="book-tab-btn" onclick="switchBookTab(event, 'reviews-${id}')">Reviews</button>
  </div>
- `;
- 
- let overviewContent = `
+ <div id="tab-overview-${id}" class="book-tab-content active">
  <div class="flex flex-col md:flex-row gap-8">
  <div style="flex:1; min-width:200px; display:flex; justify-content:center;">
  <div style="width:200px; height:300px; background:linear-gradient(135deg, ${book.color}, ${book.color}88); border-radius:12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);"></div>
@@ -1042,27 +673,22 @@ function logout() {
  <h2 class="font-display text-2xl mb-1">${book.title}</h2>
  <p class="text-[var(--text-muted)] mb-2">by <span class="text-[var(--accent-primary)]">${book.author}</span></p>
  <p class="text-sm text-[var(--text-muted)] mb-4">First published ${book.details.year}</p>
- 
  <div class="flex items-center gap-3 mb-4">
  <div class="star-rating">${createStarsHTML(book.rating)}</div>
  <span class="text-xl font-bold">${book.rating}</span>
- <span class="text-sm text-[var(--text-muted)]">${Math.floor(Math.random() * 500 + 100)} ratings</span>
  </div>
- 
  <div class="flex flex-wrap gap-2 mb-6">
  <span class="stat-pill"><strong>${book.stats.wantToRead.toLocaleString()}</strong> Want to read</span>
  <span class="stat-pill"><strong>${book.stats.currentlyReading.toLocaleString()}</strong> Currently reading</span>
  <span class="stat-pill"><strong>${book.stats.haveRead.toLocaleString()}</strong> Have read</span>
  </div>
- 
  <p class="text-[var(--text-secondary)] mb-6">${book.desc}</p>
- 
  <div class="flex flex-wrap gap-3">
  <a href="${book.readLink || '#'}" class="btn btn-primary" target="_blank" onclick="markAsRead(${book.id})">
  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
  Read Full Book
  </a>
- <button class="btn ${isRead ? 'btn-success' : 'btn-secondary'}" onclick="markAsRead(${book.id})" ${isRead ? 'style="color:#fff;"' : ''}>
+ <button class="btn ${isRead ? 'btn-success' : 'btn-secondary'}" onclick="markAsRead(${book.id})">
  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
  ${isRead ? 'Read' : 'Mark as Read'}
  </button>
@@ -1070,15 +696,12 @@ function logout() {
  <svg width="18" height="18" viewBox="0 0 24 24" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
  ${isLiked ? 'Liked' : 'Like'}
  </button>
- <button class="btn btn-secondary" onclick="toggleReadingList(${book.id})">
- ${isInList ? 'In List' : 'Add to List'}
- </button>
+ <button class="btn btn-secondary" onclick="toggleReadingList(${book.id})">${isInList ? 'In List' : 'Add to List'}</button>
  </div>
  </div>
  </div>
- `;
- 
- let detailsContent = `
+ </div>
+ <div id="tab-details-${id}" class="book-tab-content">
  <h3 class="font-display text-xl mb-4">Book Details</h3>
  <div>
  <div class="detail-row"><span class="detail-label">First Published</span><span class="detail-value">${book.details.year}</span></div>
@@ -1086,50 +709,26 @@ function logout() {
  <div class="detail-row"><span class="detail-label">Language</span><span class="detail-value">${book.details.language}</span></div>
  <div class="detail-row"><span class="detail-label">Pages</span><span class="detail-value">${book.details.pages}</span></div>
  </div>
- <div class="mt-6">
- <h4 class="font-medium mb-3">Preview available in:</h4>
- <div class="flex gap-2">
- <button class="btn btn-secondary">English</button>
- <button class="btn btn-secondary">German</button>
  </div>
- </div>
- `;
- 
- let reviewsContent = `
+ <div id="tab-reviews-${id}" class="book-tab-content">
  <h3 class="font-display text-xl mb-4">Community Reviews</h3>
- <div class="text-center py-8 text-[var(--text-muted)]">
- <p>Reviews section coming soon.</p>
+ <div class="text-center py-8 text-[var(--text-muted)]"><p>Reviews section coming soon.</p></div>
  </div>
  `;
-
- document.getElementById('previewContent').innerHTML = `
- ${tabHeaderHtml}
- 
- <div id="tab-overview-${id}" class="book-tab-content active">${overviewContent}</div>
- <div id="tab-details-${id}" class="book-tab-content">${detailsContent}</div>
- <div id="tab-reviews-${id}" class="book-tab-content">${reviewsContent}</div>
- `;
-
  openModal('bookPreviewModal');
  }
 
  function switchBookTab(evt, tabName) {
  document.querySelectorAll('.book-tab-content').forEach(c => c.classList.remove('active'));
  document.getElementById('tab-' + tabName).classList.add('active');
- 
  document.querySelectorAll('.book-tab-btn').forEach(b => b.classList.remove('active'));
  evt.target.classList.add('active');
  }
 
  function toggleLike(id) {
  const idx = userBooksLiked.indexOf(id);
- if(idx === -1) {
- userBooksLiked.push(id);
- showToast('Added to liked books', 'success');
- } else {
- userBooksLiked.splice(idx, 1);
- showToast('Removed from liked books', 'success');
- }
+ if(idx === -1) { userBooksLiked.push(id); showToast('Added to liked books', 'success'); }
+ else { userBooksLiked.splice(idx, 1); showToast('Removed from liked books', 'success'); }
  updateUI();
  openBookPreview(id);
  }
@@ -1138,7 +737,7 @@ function logout() {
  function createStarsHTML(rating) {
  let html = '';
  for(let i=1; i<=5; i++) {
- html += `<span class="star ${i <= rating ? 'active' : ''}" style="pointer-events:none;"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>`;
+   html += `<span class="star ${i <= rating ? 'active' : ''}" style="pointer-events:none;"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>`;
  }
  return html;
  }
@@ -1147,10 +746,7 @@ function logout() {
  list.innerHTML = reviewsData.map(r => `
  <div class="card mb-4" style="padding:1.5rem;">
  <div class="flex justify-between items-start mb-2">
- <div>
- <h4 class="font-semibold">${r.bookTitle}</h4>
- <p class="text-sm text-[var(--text-muted)]">${r.reviewer} • ${r.date}</p>
- </div>
+ <div><h4 class="font-semibold">${r.bookTitle}</h4><p class="text-sm text-[var(--text-muted)]">${r.reviewer} • ${r.date}</p></div>
  <div class="star-rating">${createStarsHTML(r.rating)}</div>
  </div>
  <p class="text-[var(--accent-primary)] font-medium mb-1">${r.title}</p>
@@ -1161,10 +757,8 @@ function logout() {
  }
  function deleteReview(id) {
  if(confirm('Are you sure you want to delete this review?')) {
- reviewsData = reviewsData.filter(r => r.id !== id);
- updateUI();
- renderReviews();
- showToast('Review deleted', 'success');
+   reviewsData = reviewsData.filter(r => r.id !== id);
+   updateUI(); renderReviews(); showToast('Review deleted', 'success');
  }
  }
  function renderDashboard() {
@@ -1182,10 +776,8 @@ function logout() {
  function openReviewModal() {
  const sel = document.getElementById('reviewBookSelect');
  sel.innerHTML = '<option value="">Select...</option>' + booksData.map(b => `<option value="${b.id}">${b.title}</option>`).join('');
-
  const stars = document.getElementById('reviewStarRating');
  stars.innerHTML = [1,2,3,4,5].map(i => `<span class="star" data-rating="${i}" onclick="setRating(${i})"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>`).join('');
-
  document.getElementById('reviewTitle').value = '';
  document.getElementById('reviewText').value = '';
  setRating(0);
@@ -1193,64 +785,39 @@ function logout() {
  }
  function setRating(r) {
  document.querySelectorAll('#reviewStarRating .star').forEach((s, i) => {
- if(i < r) s.classList.add('active');
- else s.classList.remove('active');
+   if(i < r) s.classList.add('active'); else s.classList.remove('active');
  });
  }
  document.getElementById('reviewForm').addEventListener('submit', function(e) {
  e.preventDefault();
  const bookId = document.getElementById('reviewBookSelect').value;
- const ratingNodes = document.querySelectorAll('#reviewStarRating .star.active');
- const rating = ratingNodes.length;
-
+ const rating = document.querySelectorAll('#reviewStarRating .star.active').length;
  const title = document.getElementById('reviewTitle').value;
  const text = document.getElementById('reviewText').value;
  if(!bookId || !rating || !title || !text) { showToast('Fill all fields', 'error'); return; }
  const book = booksData.find(b => b.id == bookId);
  reviewsData.unshift({
- id: Date.now(), bookId: parseInt(bookId), bookTitle: book.title,
- reviewer: currentUser.name, initials: currentUser.initials,
- rating: rating, title: title, text: text,
- date: 'Just now', isCurrentUser: true
+   id: Date.now(), bookId: parseInt(bookId), bookTitle: book.title,
+   reviewer: currentUser.name, initials: currentUser.initials,
+   rating: rating, title: title, text: text, date: 'Just now', isCurrentUser: true
  });
-
- updateUI();
- closeModal('reviewModal');
- showToast('Review added!', 'success');
- renderReviews();
- // 🔥 ADD THIS BELOW
-fetch('http://127.0.0.1:3000/api/reviews', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        user_id: currentUser.user_id || currentUser.id,
-        book_id: parseInt(bookId),
-        review_text: text,
-        rating: rating
-    })
-})
-.then(res => res.json())
-.then(data => {
-    if(data.success){
-        console.log("Review saved to DB");
-    } else {
-        console.log("DB save failed");
-    }
-})
-.catch(err => {
-    console.log("ERROR:", err);
-});
+ updateUI(); closeModal('reviewModal'); showToast('Review added!', 'success'); renderReviews();
+ fetch(`${API}/api/reviews`, {
+   method: 'POST',
+   headers: { 'Content-Type': 'application/json' },
+   body: JSON.stringify({ user_id: currentUser.user_id || currentUser.id, book_id: parseInt(bookId), review_text: text, rating: rating })
+ })
+ .then(res => res.json())
+ .then(data => { if(data.success) console.log("Review saved to DB"); else console.log("DB save failed"); })
+ .catch(err => console.log("ERROR:", err));
  });
- 
 
  // ========== RECOMMENDATIONS ==========
  function renderRecommendations() {
  const list = document.getElementById('recommendationsList');
  list.innerHTML = booksData.map(b => {
- const isInList = userReadingList.includes(b.id);
- return `
+   const isInList = userReadingList.includes(b.id);
+   return `
  <div class="card mb-4" style="padding:1.5rem; display:flex; gap:1.5rem; align-items:center;">
  <div style="width:80px; height:120px; background:linear-gradient(135deg, ${b.color}, ${b.color}88); border-radius:8px; flex-shrink:0;"></div>
  <div style="flex:1;">
@@ -1259,17 +826,15 @@ fetch('http://127.0.0.1:3000/api/reviews', {
  <p class="text-xs text-[var(--text-secondary)] mt-2 line-clamp-2">${b.desc}</p>
  </div>
  <button class="btn ${isInList ? 'btn-primary' : 'btn-secondary'}" onclick="toggleReadingList(${b.id})">${isInList ? 'In List' : 'Add to List'}</button>
- </div>
- `}).join('');
+ </div>`;
+ }).join('');
  }
  function toggleReadingList(id) {
  const idx = userReadingList.indexOf(id);
  if(idx === -1) { userReadingList.push(id); showToast('Added to list', 'success'); }
  else { userReadingList.splice(idx, 1); showToast('Removed', 'success'); }
  renderRecommendations();
- if(document.getElementById('bookPreviewModal').classList.contains('active')) {
- openBookPreview(id);
- }
+ if(document.getElementById('bookPreviewModal').classList.contains('active')) openBookPreview(id);
  }
 
  // ========== PROFILE ==========
@@ -1278,30 +843,17 @@ fetch('http://127.0.0.1:3000/api/reviews', {
  document.getElementById('profileAvatar').textContent = currentUser.initials;
  document.getElementById('profileName').textContent = currentUser.name;
  document.getElementById('profileEmail').textContent = currentUser.email;
-
  const genreContainer = document.getElementById('profileGenres');
  genreContainer.innerHTML = currentUser.genres.map(g => `<span class="text-xs px-2 py-1 rounded-full" style="background:var(--bg-secondary); border:1px solid var(--border-color);">${g}</span>`).join('');
-
  renderOverview();
  }
  function switchProfileTab(tab) {
- const tabMap = {
- 'overview': 'profileOverview',
- 'reading': 'profileReadingList',
- 'myreviews': 'profileMyReviews',
- 'settings': 'profileSettings'
- };
- Object.values(tabMap).forEach(id => {
- const el = document.getElementById(id);
- if(el) el.style.display = 'none';
- });
+ const tabMap = { 'overview': 'profileOverview', 'reading': 'profileReadingList', 'myreviews': 'profileMyReviews', 'settings': 'profileSettings' };
+ Object.values(tabMap).forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
  const targetId = tabMap[tab];
- if(targetId) {
- document.getElementById(targetId).style.display = 'block';
- }
+ if(targetId) document.getElementById(targetId).style.display = 'block';
  document.querySelectorAll('.profile-tabs-container .btn-secondary').forEach(b => b.classList.remove('active'));
  if(event && event.target) event.target.classList.add('active');
-
  if(tab === 'settings') renderSettings();
  if(tab === 'reading') renderReadingList();
  if(tab === 'myreviews') renderMyReviews();
@@ -1311,37 +863,26 @@ fetch('http://127.0.0.1:3000/api/reviews', {
  <div class="stats-grid">
  <div class="stat-card" onclick="showListModal('read')"><div class="stat-value">${userBooksRead.length}</div><div class="stat-label">Books Read</div></div>
  <div class="stat-card" onclick="showListModal('reviews')"><div class="stat-value">${reviewsData.filter(r=>r.isCurrentUser).length}</div><div class="stat-label">Reviews Written</div></div>
- </div>
- `;
+ </div>`;
  }
  function renderReadingList() {
  const el = document.getElementById('profileReadingList');
- if(userReadingList.length === 0) {
- el.innerHTML = '<div class="text-center text-[var(--text-muted)] py-8">Your reading list is empty. Add books from the "For You" section.</div>';
- return;
- }
+ if(userReadingList.length === 0) { el.innerHTML = '<div class="text-center text-[var(--text-muted)] py-8">Your reading list is empty.</div>'; return; }
  el.innerHTML = userReadingList.map(id => {
- const b = booksData.find(book => book.id === id);
- if(!b) return ''; // FIX: Skip if book not found
- return `<div class="list-item"><div class="list-item-cover" style="background:${b.color}"></div><div style="flex:1;"><div class="font-medium">${b.title}</div><div class="text-xs text-[var(--text-muted)]">${b.author}</div></div><button class="btn btn-secondary" onclick="toggleReadingList(${b.id}); renderReadingList();">Remove</button></div>`;
+   const b = booksData.find(book => book.id === id);
+   if(!b) return '';
+   return `<div class="list-item"><div class="list-item-cover" style="background:${b.color}"></div><div style="flex:1;"><div class="font-medium">${b.title}</div><div class="text-xs text-[var(--text-muted)]">${b.author}</div></div><button class="btn btn-secondary" onclick="toggleReadingList(${b.id}); renderReadingList();">Remove</button></div>`;
  }).join('');
  }
  function renderMyReviews() {
  const el = document.getElementById('profileMyReviews');
  const myReviews = reviewsData.filter(r => r.isCurrentUser);
- if(myReviews.length === 0) {
- el.innerHTML = '<div class="text-center text-[var(--text-muted)] py-8">You haven\'t written any reviews yet.</div>';
- return;
- }
+ if(myReviews.length === 0) { el.innerHTML = '<div class="text-center text-[var(--text-muted)] py-8">You haven\'t written any reviews yet.</div>'; return; }
  el.innerHTML = myReviews.map(r => `
  <div class="list-item flex justify-between items-center">
- <div>
- <div class="font-medium">${r.bookTitle}</div>
- <div class="text-xs text-[var(--text-muted)]">${r.rating} Stars - ${r.title}</div>
- </div>
+ <div><div class="font-medium">${r.bookTitle}</div><div class="text-xs text-[var(--text-muted)]">${r.rating} Stars - ${r.title}</div></div>
  <button class="btn btn-ghost text-xs" onclick="deleteReview(${r.id}); renderMyReviews();">Delete</button>
- </div>
- `).join('');
+ </div>`).join('');
  }
  function renderSettings() {
  document.getElementById('profileSettings').innerHTML = `
@@ -1350,20 +891,15 @@ fetch('http://127.0.0.1:3000/api/reviews', {
  <div><h3 class="font-medium">Change Password</h3><p class="text-sm text-[var(--text-muted)]">Update your security credentials.</p></div>
  <button class="btn btn-secondary" onclick="openModal('passwordModal')">Change</button>
  </div>
- </div>
- `;
+ </div>`;
  }
  function openEditProfileModal() {
  document.getElementById('editName').value = currentUser.name;
  document.getElementById('editEmail').value = currentUser.email;
  document.getElementById('editContact').value = currentUser.contact || '';
  document.getElementById('editAge').value = currentUser.age || '';
-
  const sel = document.getElementById('editGenres');
- Array.from(sel.options).forEach(o => {
- o.selected = currentUser.genres.includes(o.value);
- });
-
+ Array.from(sel.options).forEach(o => { o.selected = currentUser.genres.includes(o.value); });
  openModal('editProfileModal');
  }
  document.getElementById('editProfileForm').addEventListener('submit', function(e) {
@@ -1372,86 +908,49 @@ fetch('http://127.0.0.1:3000/api/reviews', {
  currentUser.email = document.getElementById('editEmail').value;
  currentUser.contact = document.getElementById('editContact').value;
  currentUser.age = document.getElementById('editAge').value;
-
  const genreSelect = document.getElementById('editGenres');
  currentUser.genres = Array.from(genreSelect.selectedOptions).map(o => o.value);
-
  currentUser.initials = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2);
- updateUI();
- closeModal('editProfileModal');
- showToast('Profile updated', 'success');
+ updateUI(); closeModal('editProfileModal'); showToast('Profile updated', 'success');
  });
- // Password Change Logic
  document.getElementById('passwordForm').addEventListener('submit', function(e) {
  e.preventDefault();
  const curr = document.getElementById('currentPass').value;
  const newP = document.getElementById('newPass').value;
  const conf = document.getElementById('confirmPass').value;
  const errEl = document.getElementById('passwordError');
-
  if(curr !== userPassword) { errEl.textContent = "Current password incorrect"; errEl.style.display = "block"; return; }
  const valErr = isValidPass(newP);
  if(valErr) { errEl.textContent = valErr; errEl.style.display = "block"; return; }
  if(newP !== conf) { errEl.textContent = "Passwords do not match"; errEl.style.display = "block"; return; }
- userPassword = newP;
- errEl.style.display = "none";
- closeModal('passwordModal');
- showToast('Password changed successfully', 'success');
+ userPassword = newP; errEl.style.display = "none";
+ closeModal('passwordModal'); showToast('Password changed successfully', 'success');
  document.getElementById('passwordForm').reset();
  });
 
- // ========== FIX: Robust showListModal ==========
  function showListModal(type) {
-    const title = document.getElementById('listModalTitle');
-    const content = document.getElementById('listModalContent');
-    let data = [];
-
-    if(type === 'read') {
-        title.textContent = 'Books Read';
-        // FIX: Filter out any undefined books (IDs that don't exist in booksData)
-        data = userBooksRead.map(id => booksData.find(b => b.id === id)).filter(b => b !== undefined);
-    }
-    else if(type === 'liked') {
-        title.textContent = 'Books Liked';
-        // FIX: Filter out any undefined books (IDs that don't exist in booksData)
-        data = userBooksLiked.map(id => booksData.find(b => b.id === id)).filter(b => b !== undefined);
-    }
-    else if(type === 'reviews') {
-        title.textContent = 'My Reviews';
-        const myReviews = reviewsData.filter(r => r.isCurrentUser);
-        content.innerHTML = myReviews.map(r => `<div class="list-item"><div><div class="font-medium">${r.bookTitle}</div><div class="text-xs text-[var(--text-muted)]">${r.rating} Stars</div></div></div>`).join('') || '<div class="text-center p-4 text-[var(--text-muted)]">No reviews yet</div>';
-        openModal('listModal');
-        return;
-    }
-
-    // FIX: Handle empty list gracefully
-    if(data.length === 0) {
-        const emptyMsg = type === 'read'
-            ? 'No books marked as read yet. Click "Read Full Book" or "Mark as Read" on any book to add it here.'
-            : 'No liked books yet. Click the heart icon on any book to like it.';
-        content.innerHTML = `<div class="text-center p-8 text-[var(--text-muted)]">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 1rem; opacity:0.4;">
-                ${type === 'read'
-                    ? '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'
-                    : '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>'
-                }
-            </svg>
-            <p>${emptyMsg}</p>
-        </div>`;
-    } else {
-        content.innerHTML = data.map(b => `<div class="list-item">
-            <div class="list-item-cover" style="background:linear-gradient(135deg, ${b.color}, ${b.color}88)"></div>
-            <div style="flex:1;">
-                <div class="font-medium">${b.title}</div>
-                <div class="text-xs text-[var(--text-muted)]">${b.author} • ${b.genre}</div>
-            </div>
-            ${type === 'read'
-                ? `<button class="btn btn-ghost text-xs" onclick="markAsRead(${b.id}); showListModal('read');" style="color:var(--error);">Remove</button>`
-                : `<button class="btn btn-ghost text-xs" onclick="toggleLike(${b.id}); showListModal('liked');" style="color:var(--error);">Unlike</button>`
-            }
-        </div>`).join('');
-    }
-    openModal('listModal');
+ const title = document.getElementById('listModalTitle');
+ const content = document.getElementById('listModalContent');
+ let data = [];
+ if(type === 'read') { title.textContent = 'Books Read'; data = userBooksRead.map(id => booksData.find(b => b.id === id)).filter(b => b !== undefined); }
+ else if(type === 'liked') { title.textContent = 'Books Liked'; data = userBooksLiked.map(id => booksData.find(b => b.id === id)).filter(b => b !== undefined); }
+ else if(type === 'reviews') {
+   title.textContent = 'My Reviews';
+   const myReviews = reviewsData.filter(r => r.isCurrentUser);
+   content.innerHTML = myReviews.map(r => `<div class="list-item"><div><div class="font-medium">${r.bookTitle}</div><div class="text-xs text-[var(--text-muted)]">${r.rating} Stars</div></div></div>`).join('') || '<div class="text-center p-4 text-[var(--text-muted)]">No reviews yet</div>';
+   openModal('listModal'); return;
+ }
+ if(data.length === 0) {
+   const emptyMsg = type === 'read' ? 'No books marked as read yet.' : 'No liked books yet.';
+   content.innerHTML = `<div class="text-center p-8 text-[var(--text-muted)]"><p>${emptyMsg}</p></div>`;
+ } else {
+   content.innerHTML = data.map(b => `<div class="list-item">
+ <div class="list-item-cover" style="background:linear-gradient(135deg, ${b.color}, ${b.color}88)"></div>
+ <div style="flex:1;"><div class="font-medium">${b.title}</div><div class="text-xs text-[var(--text-muted)]">${b.author} • ${b.genre}</div></div>
+ ${type === 'read' ? `<button class="btn btn-ghost text-xs" onclick="markAsRead(${b.id}); showListModal('read');" style="color:var(--error);">Remove</button>` : `<button class="btn btn-ghost text-xs" onclick="toggleLike(${b.id}); showListModal('liked');" style="color:var(--error);">Unlike</button>`}
+ </div>`).join('');
+ }
+ openModal('listModal');
  }
 
  // Initialize
@@ -1462,73 +961,45 @@ fetch('http://127.0.0.1:3000/api/reviews', {
 
  // ================= BACKEND CONNECTION =================
  async function loadBackendData() {
-    try {
-        const booksRes = await fetch('http://127.0.0.1:3000/api/books');
-        const books = await booksRes.json();
+ try {
+   const booksRes = await fetch(`${API}/api/books`);
+   const books = await booksRes.json();
+   booksData = books.map(b => ({
+     id: b.book_id, title: b.title, author: b.author, rating: b.rating || 0,
+     genre: normalizeGenre(b.genre), color: "#3b82f6", desc: b.description || "No description available.",
+     stats: { wantToRead: 0, currentlyReading: 0, haveRead: 0 },
+     details: { publisher: b.publisher || "Unknown", year: b.published_year || 2000, pages: b.pages || 100, language: b.language || "English", editions: 1 },
+     readLink: b.pdf_path
+   }));
+   userBooksRead = userBooksRead.filter(id => booksData.find(b => b.id === id));
+   userBooksLiked = userBooksLiked.filter(id => booksData.find(b => b.id === id));
 
-        booksData = books.map(b => ({
-            id: b.book_id,
-            title: b.title,
-            author: b.author,
-            rating: b.rating || 0,
-            genre: normalizeGenre(b.genre),
-            color: "#3b82f6", 
-            desc: b.description || "No description available.",
-            stats: { wantToRead: 0, currentlyReading: 0, haveRead: 0 },
-            details: {
-                publisher: b.publisher || "Unknown",
-                year: b.published_year || 2000,
-                pages: b.pages || 100,
-                language: b.language || "English",
-                editions: 1
-            },
-            readLink: b.pdf_path
-        }));
+   const reviewsRes = await fetch(`${API}/api/reviews/1`);
+   const reviews = await reviewsRes.json();
+   reviewsData = reviews.map(r => ({
+     id: r.id, bookId: r.book_id, bookTitle: books.find(b => b.book_id === r.book_id)?.title || "Book",
+     reviewer: r.reviewer_name, rating: r.rating, title: "Review",
+     text: r.review_text, date: "Recently", isCurrentUser: false
+   }));
 
-        // FIX: Reset user action arrays since backend book IDs are different from the hardcoded ones
-        // Only reset if the user hasn't performed any actions yet (arrays still have old hardcoded IDs)
-        userBooksRead = userBooksRead.filter(id => booksData.find(b => b.id === id));
-        userBooksLiked = userBooksLiked.filter(id => booksData.find(b => b.id === id));
-
-        const reviewsRes = await fetch('http://127.0.0.1:3000/api/reviews/1');
-        const reviews = await reviewsRes.json();
-
-        reviewsData = reviews.map(r => ({
-            id: r.id,
-            bookId: r.book_id,
-            bookTitle: books.find(b => b.book_id === r.book_id)?.title || "Book",
-            reviewer: r.reviewer_name,
-            rating: r.rating,
-            title: "Review",
-            text: r.review_text,
-            date: "Recently",
-            isCurrentUser: false
-        }));
-
-        // FIX: Dynamically add genre filter buttons for any backend genres not already listed
-        const existingGenres = new Set(['All', 'Fiction', 'Non-Fiction', 'Mystery', 'Sci-Fi', 'Thriller', 'Self-Help']);
-        const backendGenres = [...new Set(booksData.map(b => b.genre))];
-        const genreFiltersEl = document.getElementById('genreFilters');
-        backendGenres.forEach(genre => {
-            if(!existingGenres.has(genre)) {
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-secondary';
-                btn.textContent = genre;
-                btn.setAttribute('onclick', `filterBooks('${genre}')`);
-                genreFiltersEl.appendChild(btn);
-                existingGenres.add(genre);
-            }
-        });
-
-        renderBooks();
-        renderReviews();
-        // FIX: Update UI after backend data loads so counts are accurate
-        updateUI();
-
-    } catch (err) {
-        console.log("Backend connection error:", err);
-    }
-}
+   const existingGenres = new Set(['All', 'Fiction', 'Non-Fiction', 'Mystery', 'Sci-Fi', 'Thriller', 'Self-Help']);
+   const backendGenres = [...new Set(booksData.map(b => b.genre))];
+   const genreFiltersEl = document.getElementById('genreFilters');
+   backendGenres.forEach(genre => {
+     if(!existingGenres.has(genre)) {
+       const btn = document.createElement('button');
+       btn.className = 'btn btn-secondary';
+       btn.textContent = genre;
+       btn.setAttribute('onclick', `filterBooks('${genre}')`);
+       genreFiltersEl.appendChild(btn);
+       existingGenres.add(genre);
+     }
+   });
+   renderBooks(); renderReviews(); updateUI();
+ } catch (err) {
+   console.log("Backend connection error:", err);
+ }
+ }
  </script>
 </body>
 </html>
