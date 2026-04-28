@@ -35,6 +35,40 @@ db.getConnection((err, connection) => {
     }
 });
 
+// AUTO CREATE TABLES
+db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+`, (err) => { if(err) console.log('users table error:', err); else console.log('✅ users table ready'); });
+
+db.query(`
+    CREATE TABLE IF NOT EXISTS books (
+        book_id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255),
+        author VARCHAR(255),
+        genre VARCHAR(100),
+        description TEXT,
+        rating FLOAT,
+        pdf_path VARCHAR(500)
+    )
+`, (err) => { if(err) console.log('books table error:', err); else console.log('✅ books table ready'); });
+
+db.query(`
+    CREATE TABLE IF NOT EXISTS reviews (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        book_id INT,
+        reviewer_name VARCHAR(255),
+        rating INT,
+        review_text TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+`, (err) => { if(err) console.log('reviews table error:', err); else console.log('✅ reviews table ready'); });
+
 // ROOT
 app.get('/', (req, res) => {
     res.send('🚀 Bookworm API is running');
